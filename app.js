@@ -149,21 +149,23 @@ inputCari.addEventListener('input', () => {
 });
 
 // =============================================================
-// LANGKAH 6: tambah mahasiswa
+// LANGKAH 6: Tambah mahasiswa
 // =============================================================
+
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
 
   const f = new FormData(form);
+
   const baru = {
     nim: f.get('nim').trim(),
     nama: f.get('nama').trim(),
     tugas: f.get('tugas') === '' ? NaN : Number(f.get('tugas')),
     uts: f.get('uts') === '' ? NaN : Number(f.get('uts')),
-    uas: f.get('uas') === '' ? NaN : Number(f.get('uas')),
+    uas: f.get('uas') === '' ? NaN : Number(f.get('uas'))
   };
 
-  // 1. Validasi data mahasiswa
+  // Validasi mahasiswa
   const errors = validasiMahasiswa(baru);
 
   if (errors.length > 0) {
@@ -171,10 +173,11 @@ form.addEventListener('submit', async (event) => {
     return;
   }
 
-  // 2-4. Simpan data dan tampilkan hasil
   try {
+    // Menyimpan mahasiswa melalui API
     const hasil = await tambahMahasiswa(baru);
 
+    // Membuat rekap nilai mahasiswa baru
     const [r] = buatRekap([hasil]);
 
     tampilkanPesan(
@@ -182,8 +185,10 @@ form.addEventListener('submit', async (event) => {
       'sukses'
     );
 
+    // Mengosongkan form
     form.reset();
 
+    // Memuat ulang data
     await muatData();
 
   } catch (err) {
